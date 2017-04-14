@@ -3,6 +3,8 @@ import _ from 'lodash';
 import parse from 'parse-link-header';
 import { Table, Menu, Header } from 'semantic-ui-react'
 
+const ACCESS_TOKEN = 'e091087feaf94728dd6a07e316ed9838c1d63360';
+
 class Repo extends Component {
   constructor(props) {
     super(props);
@@ -17,7 +19,7 @@ class Repo extends Component {
   componentDidMount() {
     const { owner, repo } = this.props.match.params;
 
-    fetch(`https://api.github.com/repos/${owner}/${repo}/commits?page=${this.state.currentPage}`)
+    fetch(`https://api.github.com/repos/${owner}/${repo}/commits?page=${this.state.currentPage}&access_token=${ACCESS_TOKEN}`)
       .then((response) => {
         const link = response.headers.get('link');
         this.setState({
@@ -48,7 +50,7 @@ class Repo extends Component {
 
     const { owner, repo } = this.props.match.params;
 
-    fetch(`https://api.github.com/repos/${owner}/${repo}/commits?page=${page}`, {
+    fetch(`https://api.github.com/repos/${owner}/${repo}/commits?page=${page}&access_token=${ACCESS_TOKEN}`, {
       method: 'get'
     }).then((response) => {
       return response.json();

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Menu, Header, Input, Button, Icon } from 'semantic-ui-react'
+import { Table, Menu, Header, Input, Button, Icon } from 'semantic-ui-react';
 import parse from 'parse-link-header';
 import _ from 'lodash';
 import { Link } from 'react-router-dom';
@@ -10,10 +10,12 @@ let state = {
   pages: 0,
   error: false,
   currentPage: 1,
-  forkAsc: true,
-  watchAsc: true,
-  starAsc: true,
+  forkAsc: false,
+  watchAsc: false,
+  starAsc: false,
 }
+
+const ACCESS_TOKEN = 'e091087feaf94728dd6a07e316ed9838c1d63360';
 
 class Organization extends Component {
   constructor(props) {
@@ -44,7 +46,7 @@ class Organization extends Component {
   handleClick = (event) => {
     event.preventDefault();
 
-    const url = `https://api.github.com/orgs/${this.state.org}/repos?page=1&per_page=100`;
+    const url = `https://api.github.com/orgs/${this.state.org}/repos?page=1&per_page=100&access_token=${ACCESS_TOKEN}`;
 
     fetch(url)
       .then((response) => {
@@ -57,12 +59,12 @@ class Organization extends Component {
       return response.json();
     }).then((data) => {
       if(Array.isArray(data)) {
-        this.setState({
-          repos: data,
-          error: false,
-        })
+        // this.setState({
+        //   repos: data,
+        //   error: false,
+        // })
         // get the remaining data
-        this.getRemainingData();
+        this.getRemainingData(data);
       }
       else {
         this.setState({
@@ -72,7 +74,7 @@ class Organization extends Component {
         })
       }
 
-    }).catch((err) => {
+    }).catch(() => {
       this.setState({
         error: true,
         pages: 0,
@@ -87,16 +89,20 @@ class Organization extends Component {
   getRemainingData = (data) => {
     let urls = [];
     for(let i=2; i<=this.state.pages; i++) {
-      urls.push(`https://api.github.com/orgs/${this.state.org}/repos?page=${i}&per_page=100`)
+      urls.push(`https://api.github.com/orgs/${this.state.org}/repos?page=${i}&per_page=100&access_token=${ACCESS_TOKEN}`)
     }
 
     var promises = urls.map(url => fetch(url).then(response => response.json()));
     Promise.all(promises).then(results => {
         this.setState({
-          repos: this.state.repos.concat(_.flatten(results)),
+          repos: data.concat(_.flatten(results)),
           error: false,
         })
-    });
+    }).catch(() => this.setState({
+        error: true,
+        pages: 0,
+      })
+    )
   }
 
   /**
@@ -110,6 +116,7 @@ class Organization extends Component {
     this.setState({
       repos: this.state.forkAsc ? sorted : sorted.reverse(),
       forkAsc: !this.state.forkAsc,
+      currentPage: 1,
     })
   }
 
@@ -124,6 +131,7 @@ class Organization extends Component {
     this.setState({
       repos: this.state.watchAsc ? sorted : sorted.reverse(),
       watchAsc: !this.state.watchAsc,
+      currentPage: 1,
     })
   }
 
@@ -138,6 +146,7 @@ class Organization extends Component {
     this.setState({
       repos: this.state.starAsc ? sorted : sorted.reverse(),
       starAsc: !this.state.starAsc,
+      currentPage: 1,
     })
   }
 
@@ -157,19 +166,20 @@ class Organization extends Component {
   render() {
     let reposList = [];
     let pagination = [];
+
     if(!this.state.error) {
         const multiplier = 30 * (this.state.currentPage - 1);
         reposList = this.state.repos
           .slice(multiplier, multiplier + 30)
           .map((repo, idx) => (
             <Table.Row key={idx}>
-              <Table.Cell>{multiplier + idx + 1}</Table.Cell>
-              <Table.Cell><Link to={`/repos/${this.state.org}/${repo.name}`}>{repo.name}</Link></Table.Cell>
-              <Table.Cell><a href={repo.html_url} target="_blank">{repo.html_url}</a></Table.Cell>
-              <Table.Cell>{repo.description}</Table.Cell>
-              <Table.Cell>{repo.forks_count}</Table.Cell>
-              <Table.Cell>{repo.watchers}</Table.Cell>
-              <Table.Cell>{repo.stargazers_count}</Table.Cell>
+              <Table.Cell width="1">{multiplier + idx + 1}</Table.Cell>
+              <Table.Cell width="3"><Link to={`/repos/${this.state.org}/${repo.name}`}>{repo.name}</Link></Table.Cell>
+              <Table.Cell width="3"><a href={repo.html_url} target="_blank">{repo.html_url}</a></Table.Cell>
+              <Table.Cell width="1">{repo.forks_count}</Table.Cell>
+              <Table.Cell width="1">{repo.watchers}</Table.Cell>
+              <Table.Cell width="1">{repo.stargazers_count}</Table.Cell>
+              <Table.Cell width="6">{repo.description}</Table.Cell>
             </Table.Row>
         )
       );
@@ -216,13 +226,12 @@ class Organization extends Component {
         }
 
         {!!this.state.repos.length &&
-          <Table striped padded color="blue">
+          <Table striped padded celled color="blue">
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>#</Table.HeaderCell>
                 <Table.HeaderCell>Name</Table.HeaderCell>
                 <Table.HeaderCell>URL</Table.HeaderCell>
-                <Table.HeaderCell>Description</Table.HeaderCell>
                 <Table.HeaderCell
                   onClick={this.handleForkSort}
                   className="sort"
@@ -241,6 +250,7 @@ class Organization extends Component {
                 >
                   Stars<Icon name='sort' size='small' />
                 </Table.HeaderCell>
+                <Table.HeaderCell>Description</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
 

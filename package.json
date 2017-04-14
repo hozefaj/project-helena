@@ -6,7 +6,6 @@
     "react-scripts": "0.9.5"
   },
   "dependencies": {
-    "axios": "^0.16.1",
     "lodash": "^4.17.4",
     "parse-link-header": "^0.4.1",
     "prop-types": "^15.5.8",
