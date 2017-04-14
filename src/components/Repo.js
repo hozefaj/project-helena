@@ -3,7 +3,7 @@ import _ from 'lodash';
 import parse from 'parse-link-header';
 import { Table, Menu, Header } from 'semantic-ui-react'
 
-const ACCESS_TOKEN = 'e091087feaf94728dd6a07e316ed9838c1d63360';
+const ACCESS_TOKEN = '019c479cbc40fe3d80394f756f6ae471b0fbd929';
 
 class Repo extends Component {
   constructor(props) {
