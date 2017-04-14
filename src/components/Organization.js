@@ -35,6 +35,12 @@ class Organization extends Component {
     });
   }
 
+  handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      this.handleClick(event)
+    }
+  }
+
   componentWillUnmount() {
     state = this.state;
   }
@@ -207,6 +213,7 @@ class Organization extends Component {
           id="org"
           className="org_input"
           size="medium"
+          onKeyPress={this.handleKeyPress}
         />
         <Button
           primary
