@@ -1,0 +1,24 @@
+body {
+    margin: 0;
+    padding: 20px;
+    font-family: sans-serif;
+    background-color: #EFEBE9;
+}
+
+.org,
+.commit {
+    text-align: center;
+}
+
+.org_input {
+    margin-right: 20px;
+}
+
+i.small.icon {
+    display: inline;
+    margin-left: 0.4rem;
+}
+
+.sort {
+  cursor: pointer !important;
+}
