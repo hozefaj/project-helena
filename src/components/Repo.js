@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import parse from 'parse-link-header';
-import { Table, Menu, Header } from 'semantic-ui-react'
+import { Table, Menu, Header, Image } from 'semantic-ui-react'
 
 const ACCESS_TOKEN = '019c479cbc40fe3d80394f756f6ae471b0fbd929';
 
@@ -65,10 +65,19 @@ class Repo extends Component {
   render() {
     const commitList = this.state.commits.map((commit, idx) => (
       <Table.Row key={idx}>
-        <Table.Cell>{idx+1}</Table.Cell>
-        <Table.Cell>{commit.commit.author.name}</Table.Cell>
-        <Table.Cell><a href={commit.html_url} target="_blank">{commit.html_url}</a></Table.Cell>
-        <Table.Cell>{commit.commit.message}</Table.Cell>
+        <Table.Cell width="1">{idx+1}</Table.Cell>
+        <Table.Cell width="2">
+          <Image
+            src={_.get(commit, 'author.avatar_url', '')}
+            avatar
+            href={_.get(commit, 'author.html_url', '')}
+          />
+              {commit.commit.author.name}
+        </Table.Cell>
+        <Table.Cell width="4">
+          <a href={commit.html_url} target="_blank">{commit.html_url}</a>
+        </Table.Cell>
+        <Table.Cell width="4">{commit.commit.message}</Table.Cell>
       </Table.Row>
     ));
 
@@ -91,7 +100,7 @@ class Repo extends Component {
     return (
       <div className="commit">
           <Header size='medium'>Below is the commit history for <b>{this.props.match.params.repo}</b> repo on master branch</Header>
-          <Table striped padded color="green">
+          <Table striped padded celled color="green">
             <Table.Header>
               <Table.Row>
                 <Table.HeaderCell>#</Table.HeaderCell>
