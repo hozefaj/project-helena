@@ -35,6 +35,17 @@ class Organization extends Component {
     });
   }
 
+  defaultRepo = (event ,repo) => {
+    event.preventDefault();
+    event.persist();
+    this.setState({
+      org: repo,
+      error: false,
+    });
+
+    window.setTimeout(() => this.handleClick(event), 300);
+  }
+
   handleKeyPress = (event) => {
     if (event.key === 'Enter') {
       this.handleClick(event)
@@ -221,7 +232,12 @@ class Organization extends Component {
         >
           Search
         </Button>
-        <Header size='tiny' color='blue'>Some popular organizations include facebook, netflix, paypal, square, google.</Header>
+        <Header size='tiny' color='blue'>Some popular organizations include
+          &nbsp;<a href="#" onClick={(e) => this.defaultRepo(e, 'facebook')}>facebook</a>,
+          &nbsp;<a href="#" onClick={(e) => this.defaultRepo(e, 'netflix')}>netflix</a>,
+          &nbsp;<a href="#" onClick={(e) => this.defaultRepo(e, 'paypal')}>paypal</a>,
+          &nbsp;<a href="#" onClick={(e) => this.defaultRepo(e, 'square')}>square</a>.
+        </Header>
 
         {this.state.error &&
           <Header
