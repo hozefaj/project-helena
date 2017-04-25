@@ -233,10 +233,9 @@ class Organization extends Component {
           Search
         </Button>
         <Header size='tiny' color='blue'>Some popular organizations include
-          &nbsp;<a href="#" onClick={(e) => this.defaultRepo(e, 'facebook')}>facebook</a>,
-          &nbsp;<a href="#" onClick={(e) => this.defaultRepo(e, 'netflix')}>netflix</a>,
-          &nbsp;<a href="#" onClick={(e) => this.defaultRepo(e, 'paypal')}>paypal</a>,
-          &nbsp;<a href="#" onClick={(e) => this.defaultRepo(e, 'square')}>square</a>.
+          {['facebook', 'netflix', 'paypal', 'square'].map((company, idx) => (
+            <a key={idx} href="#" onClick={(e) => this.defaultRepo(e, company)}>&nbsp;{company},</a>
+          ))} and there will be many more.
         </Header>
 
         {this.state.error &&
