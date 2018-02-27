@@ -33,6 +33,7 @@ To view on browser to go [http://localhost:3000/](http://localhost:3000/)
 * [ ] Integrate Flow
 * [ ] Use prettier
 * [ ] Update to react v16
+* [ ] Use netlify or shurge.sh to push to live site
 
 
 
